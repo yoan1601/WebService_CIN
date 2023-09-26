@@ -1,0 +1,4 @@
+A chaque modification dans les serveurs verifiez :
+- si la nouvelle methode est dans l'interface
+- si la nouvelle methode est dans la classe qui implement l'interface
+- si la nouvelle methode est appelée dans le EJBClient

@@ -11,6 +11,8 @@ package Banque;
 public class Transaction {
     String idTransaction;
     String nomBanque;
+    String idCINTransaction;
+    String descriptionTransaction;
     double depot;
     double retrait;
     String dateHeureTransaction;
@@ -53,6 +55,22 @@ public class Transaction {
 
     public void setDateHeureTransaction(String dateHeureTransaction) {
         this.dateHeureTransaction = dateHeureTransaction;
+    }
+
+    public String getIdCINTransaction() {
+        return idCINTransaction;
+    }
+
+    public void setIdCINTransaction(String idCINTransaction) {
+        this.idCINTransaction = idCINTransaction;
+    }
+
+    public String getDescriptionTransaction() {
+        return descriptionTransaction;
+    }
+
+    public void setDescriptionTransaction(String descriptionTransaction) {
+        this.descriptionTransaction = descriptionTransaction;
     }
     
     

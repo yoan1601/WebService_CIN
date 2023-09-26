@@ -4,6 +4,9 @@
  */
 package objets;
 
+import connexion.Connect;
+import java.sql.Connection;
+
 /**
  *
  * @author ADMIN
@@ -13,11 +16,15 @@ public class Sante {
     MaladieChronique [] maladieChroniques;
     
     public static Sante consulteSante(String CINcitoyen) throws Exception {
+        Connection connection = Connect.getConnexionPostgreS­ql();
+        
         Sante s = new Sante();
-        Allergie [] lAllergies = Allergie.consulteAllergies(CINcitoyen);
-        MaladieChronique [] lMaladieChroniques = MaladieChronique.consulteMaladieChroniques(CINcitoyen);
+        Allergie [] lAllergies = Allergie.consulteAllergies(connection, CINcitoyen);
+        MaladieChronique [] lMaladieChroniques = MaladieChronique.consulteMaladieChroniques(connection, CINcitoyen);
         s.setAllergies(lAllergies);
         s.setMaladieChroniques(lMaladieChroniques);
+        
+        connection.close();
         return s;
     }
 

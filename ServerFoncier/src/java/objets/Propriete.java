@@ -4,6 +4,12 @@
  */
 package objets;
 
+import connexion.Connect;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+
 /**
  *
  * @author ADMIN
@@ -17,6 +23,66 @@ public class Propriete {
         setIdPropriete(idPropriete);
         setIdCINPropriete(idCINPropriete);
         setDescriptionPropriete(descriptionPropriete);
+    }
+    
+    public static Propriete [] consulteProprietes(Connection connection,String CINcitoyen) throws Exception {
+        boolean isOpened = false;
+        try {
+            if (connection == null) {
+                isOpened = true;
+                connection = Connect.getConnexionSQLite();
+            }
+            try {
+                String requete = "SELECT * FROM proprietes WHERE idCINPropriete = ?";
+                System.out.println(requete + " CINcitoyen " + CINcitoyen);
+                PreparedStatement prepStat = connection.prepareStatement(requete);
+                prepStat.setString(1, CINcitoyen);
+                ResultSet resultSet = prepStat.executeQuery();
+
+//                if (resultSet.beforeFirst()) {
+//                    
+//                }
+
+                ArrayList<Propriete> lProprietes = new ArrayList<>();
+                Propriete Propriete = null;
+                String idPropriete = "";
+                String idCINPropriete = "";
+                String descriptionPropriete = "";
+                
+                while(resultSet.next()) {
+                    idPropriete = resultSet.getString("idPropriete");
+                    idCINPropriete = resultSet.getString("idCINPropriete");
+                    descriptionPropriete = resultSet.getString("descriptionPropriete");
+                    Propriete = new Propriete(idPropriete, idCINPropriete, descriptionPropriete);
+                    lProprietes.add(Propriete);
+                }
+                
+                if(lProprietes.isEmpty()) return new Propriete[0];
+                
+                Propriete [] la = Propriete.transArrayList(lProprietes);
+                return la;
+
+            } catch (Exception e) {
+                System.out.println(">>> Propriete.consulteProprietes : "+e.getMessage());
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (isOpened == true) {
+                connection.close();
+            }
+        }
+
+        return null;
+    }
+    
+    public static Propriete[] transArrayList(ArrayList<Propriete> lProprietes) {
+        Propriete [] la = new Propriete[lProprietes.size()];
+        for (int i = 0; i < lProprietes.size(); i++) {
+            la[i] = lProprietes.get(i);
+        }
+        return la;
     }
     
     public static Propriete [] consulteProprietes(String CINcitoyen) throws Exception {

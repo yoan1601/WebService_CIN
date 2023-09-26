@@ -6,10 +6,8 @@ package server;
 
 import objets.Sante;
 import jakarta.ejb.Remote;
-import objets.Citoyen;
 
 @Remote
 public interface SanteServerInterface {
-    public Citoyen getCitoyenByCINWithoutConsultation(String CIN);
     public Sante consulteSante(String idCIN);
 }

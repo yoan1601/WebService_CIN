@@ -4,22 +4,11 @@ import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import objets.Citoyen;
 import objets.Sante;
 
 @Stateless
 @Remote(SanteServerInterface.class)
 public class SanteServer implements SanteServerInterface {
-    
-    @Override
-    public Citoyen getCitoyenByCINWithoutConsultation(String CIN) {
-        try {
-            return Citoyen.getCitoyenByCINWithoutConsultation(CIN);
-        } catch (Exception ex) {
-            Logger.getLogger(SanteServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
 
     @Override
     public Sante consulteSante(String idCIN) {

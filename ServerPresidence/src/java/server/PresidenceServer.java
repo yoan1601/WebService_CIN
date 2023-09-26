@@ -2,31 +2,21 @@ package server;
 
 import jakarta.ejb.Remote;
 import jakarta.ejb.Stateless;
+import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objets.Citoyen;
-import objets.Sante;
 
 @Stateless
-@Remote(SanteServerInterface.class)
-public class SanteServer implements SanteServerInterface {
-    
+@Remote(PresidenceServerInterface.class)
+public class PresidenceServer implements PresidenceServerInterface {
+      
     @Override
-    public Citoyen getCitoyenByCINWithoutConsultation(String CIN) {
+    public Citoyen getCitoyenByCIN(Connection connection, String CIN) {
         try {
-            return Citoyen.getCitoyenByCINWithoutConsultation(CIN);
+            return Citoyen.getCitoyenByCIN(connection, CIN);
         } catch (Exception ex) {
-            Logger.getLogger(SanteServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    @Override
-    public Sante consulteSante(String idCIN) {
-        try {
-            return Sante.consulteSante(idCIN);
-        } catch (Exception ex) {
-            Logger.getLogger(SanteServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PresidenceServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

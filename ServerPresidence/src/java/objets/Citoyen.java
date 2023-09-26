@@ -5,6 +5,14 @@
 package objets;
 
 import Banque.Finance;
+import banque_dotnet.DotNetWebServiceClient;
+import connexion.Connect;
+import foncier_java.EJBFoncierClient;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import sante_java.EJBSanteClient;
 
 /**
  *
@@ -29,6 +37,137 @@ public class Citoyen {
         this.nom = nom;
         this.prenom = prenom;
         this.dateNaissance = dateNaissance;
+    }
+    
+    public static Citoyen getCitoyenByCIN(Connection connection, String CINcitoyen) throws Exception {
+        EJBSanteClient eJBSanteClient = new EJBSanteClient();
+        EJBFoncierClient eJBFoncierClient = new EJBFoncierClient();
+        Citoyen citoyen = Citoyen.getCitoyenByCINWithoutConsultation(connection, CINcitoyen);
+        Sante sante = eJBSanteClient.consulteSante(citoyen.getIdCIN());
+        Foncier foncier = eJBFoncierClient.consulteFoncier(citoyen.getIdCIN());
+        Finance finance = DotNetWebServiceClient.consulteFinance(citoyen.getIdCIN());
+
+        citoyen.setSante(sante);
+        citoyen.setFoncier(foncier);
+        citoyen.setFinance(finance);
+        
+        return citoyen;
+    }
+    
+    public static Citoyen getCitoyenByCINWithoutConsultation(Connection connection, String CINcitoyen) throws Exception {
+        boolean isOpened = false;
+        try {
+            if (connection == null) {
+                isOpened = true;
+                connection = Connect.getConnexionPostgreS­ql();
+            }
+            try {
+                String requete = "SELECT * FROM citoyens WHERE idcin = ?";
+                System.out.println(requete + " CINcitoyen " + CINcitoyen);
+                PreparedStatement prepStat = connection.prepareStatement(requete);
+                prepStat.setString(1, CINcitoyen);
+                ResultSet resultSet = prepStat.executeQuery();
+
+//                if (resultSet.beforeFirst()) {
+//                    
+//                }
+
+                String idcitoyen = "";
+                String idcin = "";
+                String nom = "";
+                String prenom = "";
+                String datenaissance = "";
+                Citoyen citoyen = null;
+                
+                if(resultSet.next()) {
+                    idcitoyen = resultSet.getString("idcitoyen");
+                    idcin = resultSet.getString("idcin");
+                    nom = resultSet.getString("nom");
+                    prenom = resultSet.getString("prenom");
+                    datenaissance = resultSet.getString("datenaissance");
+                    
+                    citoyen = new Citoyen(idcitoyen, idcin, nom, prenom, datenaissance);
+                }
+
+                return citoyen;
+
+            } catch (Exception e) {
+                System.out.println(">>> Citoyen.getCitoyenByCINWithoutConsultation : "+e.getMessage());
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (isOpened == true) {
+                connection.close();
+            }
+        }
+
+        return null;
+    }
+    
+    public static Citoyen [] getAllCitoyen(Connection connection) throws Exception {
+        boolean isOpened = false;
+        try {
+            if (connection == null) {
+                isOpened = true;
+                connection = Connect.getConnexionPostgreS­ql();
+            }
+            try {
+                String requete = "SELECT * FROM citoyens";
+                System.out.println(requete);
+                PreparedStatement prepStat = connection.prepareStatement(requete);
+                ResultSet resultSet = prepStat.executeQuery();
+
+//                if (resultSet.beforeFirst()) {
+//                    
+//                }
+
+                ArrayList<Citoyen> lCitoyens = new ArrayList<>();
+                String idcitoyen = "";
+                String idcin = "";
+                String nom = "";
+                String prenom = "";
+                String datenaissance = "";
+                Citoyen citoyen = null;
+                
+                while(resultSet.next()) {
+                    idcitoyen = resultSet.getString("idcitoyen");
+                    idcin = resultSet.getString("idcin");
+                    nom = resultSet.getString("nom");
+                    prenom = resultSet.getString("prenom");
+                    datenaissance = resultSet.getString("datenaissance");
+                    
+                    citoyen = new Citoyen(idcitoyen, idcin, nom, prenom, datenaissance);
+                    lCitoyens.add(citoyen);
+                }
+                
+                if(lCitoyens.isEmpty()) return new Citoyen[0];
+                
+                Citoyen [] la = Citoyen.transArrayList(lCitoyens);
+                return la;
+
+            } catch (Exception e) {
+                System.out.println(">>> Citoyen.getAllCitoyen : "+e.getMessage());
+            }
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (isOpened == true) {
+                connection.close();
+            }
+        }
+
+        return null;
+    }
+    
+    public static Citoyen[] transArrayList(ArrayList<Citoyen> lCitoyens) {
+        Citoyen [] la = new Citoyen[lCitoyens.size()];
+        for (int i = 0; i < lCitoyens.size(); i++) {
+            la[i] = lCitoyens.get(i);
+        }
+        return la;
     }
     
     public static Citoyen getCitoyenByCINWithoutConsultation(String CIN) throws Exception {

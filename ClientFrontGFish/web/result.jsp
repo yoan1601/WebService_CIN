@@ -164,7 +164,7 @@
                                                     <div class="card-body">
                                                         <h5 class="card-title">CIN : <% if(citoyen != null) out.print(citoyen.getIdCIN()); else out.print("calme alony"); %></h5>
                                                         <p class="card-text">
-                                                            RABARIJAONA Harena Juan
+                                                            <% if(citoyen != null) out.print(citoyen.getNom()+" "+citoyen.getPrenom()); else out.print("calme alony"); %>
                                                         </p>
 
                                                     </div>
@@ -245,7 +245,7 @@
                                                         </div>
                                                         <div>
                                                             <h5 class="card-title">Solde</h5>
-                                                            <p>mbola calculena Ar</p>
+                                                            <p><% if(citoyen == null) out.print("votre citoyen est null"); else out.print(citoyen.getFinance().getSolde()); %> Ar</p>
 
                                                         </div>
                                                         <div>
@@ -264,12 +264,12 @@
                                                                             <% if(citoyen == null) out.print("votre citoyen est null"); else { %>
 
                                                                             <% if(citoyen.getFinance().getTransactions().length > 0) { %>
-                                                                                <% for(Transaction trans : citoyen.getFinance().getTransactions()) { %>
+                                                                                <% for(int i = 0; i < 3; i++) { %>
                                                                             <tr>
                                                                                 
-                                                                                <td style="font-size: smaller;"><%= trans.getDepot() %></td>
-                                                                                <td style="font-size: smaller;"><%= trans.getRetrait() %></td>
-                                                                                <td style="font-size: smaller;"><%= trans.getDateHeureTransaction() %></td>
+                                                                                <td style="font-size: smaller;"><%= citoyen.getFinance().getTransactions()[i].getDepot() %></td>
+                                                                                <td style="font-size: smaller;"><%= citoyen.getFinance().getTransactions()[i].getRetrait() %></td>
+                                                                                <td style="font-size: smaller;"><%= citoyen.getFinance().getTransactions()[i].getDateHeureTransaction() %></td>
                                                                                 
                                                                             </tr>
                                                                                 <% } %>

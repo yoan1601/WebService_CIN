@@ -1,8 +1,5 @@
 package servlet;
 
-import Banque.Finance;
-import banque_dotnet.DotNetWebServiceClient;
-import foncier_java.EJBFoncierClient;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,10 +10,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objets.Citoyen;
-import objets.Foncier;
-//import objets.Foncier;
-import objets.Sante;
-import sante_java.EJBSanteClient;
+
+import presidence_java.EJBPresidenceClient;
 
 public class ConsultationServlet extends HttpServlet {
 
@@ -26,16 +21,9 @@ public class ConsultationServlet extends HttpServlet {
         try ( PrintWriter out = response.getWriter()) {
             String cin = request.getParameter("CIN");
             
-            EJBSanteClient eJBSanteClient = new EJBSanteClient();
-            EJBFoncierClient eJBFoncierClient = new EJBFoncierClient();
-            Citoyen citoyen = eJBSanteClient.getCitoyenByCINWithoutConsultation(cin);
-            Sante sante = eJBSanteClient.consulteSante(citoyen.getIdCIN());
-            Foncier foncier = eJBFoncierClient.consulteFoncier(citoyen.getIdCIN());
-            Finance finance = DotNetWebServiceClient.consulteFinance(cin);
-            
-            citoyen.setSante(sante);
-            citoyen.setFoncier(foncier);
-            citoyen.setFinance(finance);
+            EJBPresidenceClient eJBPresidenceClient = new EJBPresidenceClient();
+
+            Citoyen citoyen = eJBPresidenceClient.consulteCitoyen(null, cin);
             
             request.setAttribute("citoyen", citoyen);
             RequestDispatcher dispatch = request.getRequestDispatcher("result.jsp");

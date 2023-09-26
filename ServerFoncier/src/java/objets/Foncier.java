@@ -4,13 +4,21 @@
  */
 package objets;
 
+import connexion.Connect;
+import java.sql.Connection;
+
 public class Foncier {
     Propriete [] proprietes;
     
     public static Foncier consulteFoncier(String CINcitoyen) throws Exception {
+        Connection connection = Connect.getConnexionSQLite();
+        
         Foncier f = new Foncier();
-        Propriete [] lProprietes = Propriete.consulteProprietes(CINcitoyen);
+//        Propriete [] lProprietes = Propriete.consulteProprietes(CINcitoyen);
+        Propriete [] lProprietes = Propriete.consulteProprietes(connection, CINcitoyen);
         f.setProprietes(lProprietes);
+        
+        connection.close();
         return f;
     }
 

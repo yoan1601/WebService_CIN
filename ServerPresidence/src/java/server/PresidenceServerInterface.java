@@ -4,12 +4,11 @@
  */
 package server;
 
-import objets.Sante;
 import jakarta.ejb.Remote;
+import java.sql.Connection;
 import objets.Citoyen;
 
 @Remote
-public interface SanteServerInterface {
-    public Citoyen getCitoyenByCINWithoutConsultation(String CIN);
-    public Sante consulteSante(String idCIN);
+public interface PresidenceServerInterface {
+    public Citoyen getCitoyenByCIN(Connection connection, String CIN);
 }

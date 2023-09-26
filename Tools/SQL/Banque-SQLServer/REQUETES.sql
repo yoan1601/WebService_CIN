@@ -1,0 +1,1 @@
+select * from transactions where idCINTransaction = '123456' ORDER BY dateHeureTransaction DESC;

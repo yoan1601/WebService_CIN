@@ -11,6 +11,7 @@ package Banque;
 public class Finance {
     Banque banque;
     Transaction [] transactions;
+    double solde;
 
     public Banque getBanque() {
         return banque;
@@ -26,6 +27,14 @@ public class Finance {
 
     public void setTransactions(Transaction[] transactions) {
         this.transactions = transactions;
+    }
+
+    public double getSolde() {
+        return solde;
+    }
+
+    public void setSolde(double solde) {
+        this.solde = solde;
     }
     
     
